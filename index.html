@@ -6,11 +6,20 @@
 
   <title>Standalone HTML Apps</title>
 
-  <meta name="description" content="A collection of small, standalone HTML applications designed for simple and lightweight use cases." />
+  <meta
+    name="description"
+    content="A collection of small, standalone HTML applications designed for simple and lightweight use cases."
+  />
   <meta name="author" content="Muhammad Fiaz" />
   <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://muhammad-fiaz.github.io/standalone-html-apps/" />
 
-  <link rel="icon" href="https://avatars.githubusercontent.com/u/75434191?v=4" type="image/png">
+  <!-- Favicon -->
+  <link
+    rel="icon"
+    href="https://avatars.githubusercontent.com/u/75434191?v=4"
+    type="image/png"
+  />
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -24,30 +33,46 @@
 
 <body class="min-h-screen text-white">
 
-  <main class="max-w-5xl mx-auto px-6 py-16">
-    <header class="mb-12 text-center">
-      <h1 class="text-4xl font-bold mb-3">Standalone HTML Apps</h1>
-      <p class="text-gray-400 max-w-2xl mx-auto">
+  <main class="max-w-6xl mx-auto px-6 py-16">
+    <!-- Header -->
+    <header class="mb-14 text-center">
+      <h1 class="text-4xl sm:text-5xl font-bold mb-4">
+        Standalone HTML Apps
+      </h1>
+      <p class="text-gray-400 max-w-2xl mx-auto text-base sm:text-lg">
         A collection of small, standalone HTML applications designed for simple and lightweight use cases.
       </p>
     </header>
 
+    <!-- App List -->
     <section>
-      <h2 class="text-xl font-semibold mb-6 text-gray-200">Available Apps</h2>
+      <h2 class="text-xl font-semibold mb-6 text-gray-200 text-center sm:text-left">
+        Available Apps
+      </h2>
 
-      <div id="app-list" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div
+        id="app-list"
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+      >
         <div class="text-gray-500">Loading applications…</div>
       </div>
     </section>
 
-    <footer class="mt-16 text-center text-sm text-gray-500">
+    <!-- Footer -->
+    <footer class="mt-20 text-center text-sm text-gray-500">
       Built by
-      <a href="https://github.com/muhammad-fiaz" class="underline hover:text-white">
+      <a
+        href="https://github.com/muhammad-fiaz"
+        class="underline hover:text-white transition"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         Muhammad Fiaz
       </a>
     </footer>
   </main>
 
+  <!-- Script -->
   <script>
     const OWNER = "muhammad-fiaz";
     const REPO = "standalone-html-apps";
@@ -57,15 +82,15 @@
     const listEl = document.getElementById("app-list");
 
     fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${APPS_DIR}?ref=${BRANCH}`)
-      .then(res => {
+      .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch app list");
         return res.json();
       })
-      .then(files => {
+      .then((files) => {
         listEl.innerHTML = "";
 
         const htmlFiles = files
-          .filter(f => f.type === "file" && f.name.endsWith(".html"))
+          .filter((f) => f.type === "file" && f.name.endsWith(".html"))
           .sort((a, b) => a.name.localeCompare(b.name));
 
         if (!htmlFiles.length) {
@@ -74,7 +99,7 @@
           return;
         }
 
-        htmlFiles.forEach(file => {
+        htmlFiles.forEach((file) => {
           const url = `https://${OWNER}.github.io/${REPO}/${APPS_DIR}/${file.name}`;
           const title = file.name
             .replace(".html", "")
@@ -85,17 +110,21 @@
           card.target = "_blank";
           card.rel = "noopener noreferrer";
           card.className =
-            "block p-5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition";
+            "block p-6 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition";
 
           card.innerHTML = `
-            <h3 class="font-semibold text-lg capitalize mb-1">${title}</h3>
-            <p class="text-xs text-gray-400 break-all">${file.name}</p>
+            <h3 class="font-semibold text-lg capitalize mb-1">
+              ${title}
+            </h3>
+            <p class="text-xs text-gray-400 break-all">
+              ${file.name}
+            </p>
           `;
 
           listEl.appendChild(card);
         });
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err);
         listEl.innerHTML =
           "<div class='text-red-400'>Failed to load app list.</div>";
