@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Any2Any Image Converter – Offline, Fast & Private</title>
+
+<meta name="description" content="Convert images between JPG, PNG, WEBP, AVIF, BMP, GIF, SVG, TIFF, ICO, and HEIC directly in your browser. 100% offline, private, fast, and free. No uploads.">
+
+<meta name="keywords" content="any to any image converter, image format converter, jpg to png, png to webp, avif converter, offline image converter, browser image converter, client side image processing">
+<link rel="icon" href="https://avatars.githubusercontent.com/u/75434191?v=4" type="image/png">
+
+<meta name="author" content="Muhammad Fiaz">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#111827">
+<link rel="canonical" href="https://muhammad-fiaz.github.io/standalone-html-apps/any2any-image-converter.html">
+<meta property="og:title" content="Any2Any Image Converter – Offline & Private">
+<meta property="og:description" content="Convert images between all common formats directly in your browser. No uploads, no tracking, works offline.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://muhammad-fiaz.github.io/standalone-html-apps/any2any-image-converter.html">
+<meta property="og:image" content="https://avatars.githubusercontent.com/u/75434191?v=4">
+<meta property="og:site_name" content="Standalone HTML Apps">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Any2Any Image Converter – Browser Native">
+<meta name="twitter:description" content="Offline image converter supporting JPG, PNG, WEBP, AVIF, BMP, SVG, TIFF, ICO, HEIC. No uploads.">
+<meta name="twitter:image" content="https://avatars.githubusercontent.com/u/75434191?v=4">
+<meta name="twitter:creator" content="@muhammadfiaz_">
+  
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Any2Any Image Converter",
+  "description": "A browser-native, offline image format converter supporting JPG, PNG, WEBP, AVIF, BMP, GIF, SVG, TIFF, ICO, and HEIC.",
+  "applicationCategory": "MultimediaApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires modern browser with Canvas API",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Muhammad Fiaz",
+    "url": "https://muhammadfiaz.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Standalone HTML Apps",
+    "url": "https://muhammad-fiaz.github.io"
+  }
+}
+</script>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="referrer" content="no-referrer">
+
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- GSAP for Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.3); }
+
+        /* Glass Utility Classes */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
+        }
+
+        .glass-input {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .glass-input:focus {
+            outline: none;
+            border-color: rgba(99, 102, 241, 0.5);
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        /* Range Slider Styling */
+        input[type=range] {
+            -webkit-appearance: none; 
+            background: transparent; 
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px; width: 16px;
+            border-radius: 50%;
+            background: #6366f1;
+            cursor: pointer;
+            margin-top: -6px;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%; height: 4px;
+            cursor: pointer;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+        }
+
+        /* Animation Classes */
+        .fade-in { animation: fadeIn 0.4s ease-out forwards; opacity: 0; }
+        @keyframes fadeIn { to { opacity: 1; } }
+        
+        .drop-zone-active {
+            border-color: #6366f1 !important;
+            background: rgba(99, 102, 241, 0.1) !important;
+            transform: scale(1.01);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen overflow-x-hidden relative selection:bg-indigo-500 selection:text-white">
+
+    <!-- Abstract Background -->
+    <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+        <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-purple-600/20 rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-indigo-600/20 rounded-full blur-[120px]"></div>
+        <div class="absolute top-[40%] left-[40%] w-[30%] h-[30%] bg-blue-500/10 rounded-full blur-[100px]"></div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed top-6 right-6 z-50 flex flex-col gap-3 pointer-events-none"></div>
+
+    <!-- Main Container -->
+    <div class="relative z-10 max-w-6xl mx-auto px-4 py-8 flex flex-col min-h-screen">
+        
+        <!-- Header -->
+        <header class="flex flex-col md:flex-row justify-between items-center mb-10 gap-4">
+            <div class="flex items-center gap-3">
+                <div class="p-3 bg-indigo-500/20 rounded-xl border border-indigo-500/30 backdrop-blur-md">
+                    <i data-lucide="layers" class="w-8 h-8 text-indigo-400"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
+                        Universal Converter
+                    </h1>
+                    <p class="text-xs text-gray-400 font-medium tracking-wide uppercase">Browser-Native Image Engine</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-4 glass-panel px-4 py-2 rounded-full">
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                    <span class="text-xs text-gray-300 font-mono">System Ready</span>
+                </div>
+                <div class="w-px h-4 bg-white/10"></div>
+                <div class="text-xs text-gray-400 font-mono">v1.0.0</div>
+            </div>
+        </header>
+
+        <!-- Main Content Grid -->
+        <main class="grid grid-cols-1 lg:grid-cols-12 gap-8 flex-grow">
+            
+            <!-- Left Panel: Controls & Drop Zone -->
+            <div class="lg:col-span-4 flex flex-col gap-6">
+                
+                <!-- Drop Zone -->
+                <div id="drop-zone" class="glass-panel rounded-2xl p-8 border-2 border-dashed border-gray-600 hover:border-gray-500 transition-all cursor-pointer relative group flex flex-col items-center justify-center text-center min-h-[280px]">
+                    <input type="file" id="file-input" multiple accept="image/*, .jpg, .jpeg, .png, .gif, .webp, .bmp, .tiff, .tif, .avif, .heic, .heif, .svg, .ico" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                    
+                    <div class="w-16 h-16 rounded-full bg-gray-800/50 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 pointer-events-none">
+                        <i data-lucide="upload-cloud" class="w-8 h-8 text-indigo-400"></i>
+                    </div>
+                    
+                    <h3 class="text-lg font-semibold text-white mb-2 pointer-events-none">Drop images here</h3>
+                    <p class="text-sm text-gray-400 mb-6 pointer-events-none max-w-[200px]">
+                        Supports JPG, PNG, WEBP, AVIF, BMP, GIF, SVG, TIFF, ICO, HEIC
+                    </p>
+                    
+                    <button class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-lg transition-colors shadow-lg shadow-indigo-500/20 pointer-events-none">
+                        Browse Files
+                    </button>
+                </div>
+
+                <!-- Settings Panel -->
+                <div class="glass-panel rounded-2xl p-6 flex flex-col gap-6">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i data-lucide="sliders" class="w-4 h-4 text-indigo-400"></i>
+                        <h3 class="font-semibold text-white">Output Settings</h3>
+                    </div>
+
+                    <!-- Format Selector -->
+                    <div class="space-y-2">
+                        <label class="text-xs text-gray-400 uppercase font-bold tracking-wider">Target Format</label>
+                        <div class="relative">
+                            <select id="format-select" class="w-full glass-input rounded-lg px-4 py-3 text-sm appearance-none cursor-pointer">
+                                <!-- Options populated by JS -->
+                            </select>
+                            <i data-lucide="chevron-down" class="absolute right-4 top-3.5 w-4 h-4 text-gray-400 pointer-events-none"></i>
+                        </div>
+                    </div>
+
+                    <!-- Quality Slider -->
+                    <div id="quality-control" class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <label class="text-xs text-gray-400 uppercase font-bold tracking-wider">Quality</label>
+                            <span id="quality-value" class="text-xs font-mono text-indigo-400 bg-indigo-500/10 px-2 py-1 rounded">80%</span>
+                        </div>
+                        <input type="range" id="quality-slider" min="1" max="100" value="80" class="w-full h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer">
+                    </div>
+
+                    <!-- Global Actions -->
+                    <div class="pt-4 border-t border-white/10 flex flex-col gap-3">
+                        <button id="convert-all-btn" disabled class="w-full py-3 bg-white text-gray-900 font-bold rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg active:scale-[0.98] flex items-center justify-center gap-2">
+                            <i data-lucide="zap" class="w-4 h-4"></i>
+                            Convert All
+                        </button>
+                        <button id="download-all-btn" class="w-full py-3 bg-gray-800 border border-white/10 text-white font-semibold rounded-lg hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all hidden flex items-center justify-center gap-2">
+                            <i data-lucide="archive" class="w-4 h-4"></i>
+                            Download ZIP
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Gallery -->
+            <div class="lg:col-span-8 flex flex-col h-full min-h-[500px]">
+                
+                <!-- Empty State -->
+                <div id="empty-state" class="flex-grow glass-panel rounded-2xl flex flex-col items-center justify-center p-12 text-center border-dashed border border-white/10">
+                    <div class="w-24 h-24 bg-gray-800/30 rounded-full flex items-center justify-center mb-6">
+                        <i data-lucide="image" class="w-10 h-10 text-gray-600"></i>
+                    </div>
+                    <h3 class="text-xl font-medium text-gray-300 mb-2">No images yet</h3>
+                    <p class="text-gray-500 max-w-sm">
+                        Upload images from the left panel to start converting. Your files are processed entirely in your browser.
+                    </p>
+                </div>
+
+                <!-- Gallery Grid -->
+                <div id="gallery-grid" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4 auto-rows-max pb-20">
+                    <!-- File cards injected here -->
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Hidden Canvas for Processing -->
+    <canvas id="process-canvas" class="hidden"></canvas>
+
+    <!-- Application Script -->
+    <script>
+        // --- CORE UTILS: ZIP WRITER (Native API) ---
+        /**
+         * A lightweight uncompressed ZIP writer using Native ArrayBuffers.
+         * Adheres to strict "No external libraries" for zip generation.
+         */
+        class NativeZipWriter {
+            constructor() {
+                this.files = [];
+            }
+
+            add(filename, blob) {
+                this.files.push({ filename, blob });
+            }
+
+            async generate() {
+                const parts = [];
+                let offset = 0;
+                const centralDirectory = [];
+                const textEnc = new TextEncoder();
+
+                // CRC32 Table
+                const crcTable = new Int32Array(256);
+                for (let i = 0; i < 256; i++) {
+                    let c = i;
+                    for (let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+                    crcTable[i] = c;
+                }
+                const crc32 = (data) => {
+                    let crc = -1;
+                    for (let i = 0; i < data.length; i++) crc = (crc >>> 8) ^ crcTable[(crc ^ data[i]) & 0xFF];
+                    return (crc ^ -1) >>> 0;
+                };
+
+                for (const file of this.files) {
+                    const data = new Uint8Array(await file.blob.arrayBuffer());
+                    const nameBuf = textEnc.encode(file.filename);
+                    const crc = crc32(data);
+                    const size = data.length;
+
+                    // Local File Header
+                    const header = new Uint8Array(30 + nameBuf.length);
+                    const view = new DataView(header.buffer);
+                    view.setUint32(0, 0x04034b50, true); // Signature
+                    view.setUint16(4, 10, true); // Version
+                    view.setUint16(6, 0, true); // Flags
+                    view.setUint16(8, 0, true); // Compression (0 = Store)
+                    view.setUint16(10, 0, true); // Time (placeholder)
+                    view.setUint16(12, 0, true); // Date (placeholder)
+                    view.setUint32(14, crc, true); // CRC32
+                    view.setUint32(18, size, true); // Compressed Size
+                    view.setUint32(22, size, true); // Uncompressed Size
+                    view.setUint16(26, nameBuf.length, true); // Filename Length
+                    view.setUint16(28, 0, true); // Extra Field Length
+                    header.set(nameBuf, 30);
+
+                    parts.push(header);
+                    parts.push(data);
+
+                    // Central Directory Record
+                    const cdir = new Uint8Array(46 + nameBuf.length);
+                    const cView = new DataView(cdir.buffer);
+                    cView.setUint32(0, 0x02014b50, true); // Signature
+                    cView.setUint16(4, 10, true); // Version Made By
+                    cView.setUint16(6, 10, true); // Version Needed
+                    cView.setUint16(8, 0, true); // Flags
+                    cView.setUint16(10, 0, true); // Compression
+                    cView.setUint16(12, 0, true); // Time
+                    cView.setUint16(14, 0, true); // Date
+                    cView.setUint32(16, crc, true); // CRC32
+                    cView.setUint32(20, size, true); // Compressed Size
+                    cView.setUint32(24, size, true); // Uncompressed Size
+                    cView.setUint16(28, nameBuf.length, true); // Filename Len
+                    cView.setUint16(30, 0, true); // Extra Len
+                    cView.setUint16(32, 0, true); // Comment Len
+                    cView.setUint16(34, 0, true); // Disk Start
+                    cView.setUint16(36, 0, true); // Internal Attr
+                    cView.setUint32(38, 0, true); // External Attr
+                    cView.setUint32(42, offset, true); // Offset of Local Header
+                    cdir.set(nameBuf, 46);
+                    
+                    centralDirectory.push(cdir);
+                    offset += header.length + data.length;
+                }
+
+                // End of Central Directory
+                const cdSize = centralDirectory.reduce((acc, val) => acc + val.length, 0);
+                const eocd = new Uint8Array(22);
+                const eView = new DataView(eocd.buffer);
+                eView.setUint32(0, 0x06054b50, true); // Signature
+                eView.setUint16(4, 0, true); // Disk Num
+                eView.setUint16(6, 0, true); // Disk CDR Start
+                eView.setUint16(8, this.files.length, true); // Num Records on Disk
+                eView.setUint16(10, this.files.length, true); // Total Num Records
+                eView.setUint32(12, cdSize, true); // Size of CDR
+                eView.setUint32(16, offset, true); // Offset of CDR
+                eView.setUint16(20, 0, true); // Comment Len
+
+                return new Blob([...parts, ...centralDirectory, eocd], { type: 'application/zip' });
+            }
+        }
+
+        // --- APPLICATION STATE ---
+        const state = {
+            files: new Map(), // Stores file objects by ID
+            settings: {
+                format: 'image/jpeg',
+                quality: 0.8
+            },
+            supportedFormats: []
+        };
+
+        // --- DOM ELEMENTS ---
+        const els = {
+            dropZone: document.getElementById('drop-zone'),
+            fileInput: document.getElementById('file-input'),
+            gallery: document.getElementById('gallery-grid'),
+            emptyState: document.getElementById('empty-state'),
+            formatSelect: document.getElementById('format-select'),
+            qualitySlider: document.getElementById('quality-slider'),
+            qualityValue: document.getElementById('quality-value'),
+            qualityControl: document.getElementById('quality-control'),
+            convertAllBtn: document.getElementById('convert-all-btn'),
+            downloadAllBtn: document.getElementById('download-all-btn'),
+            canvas: document.getElementById('process-canvas'),
+            toastContainer: document.getElementById('toast-container')
+        };
+
+        // --- INITIALIZATION ---
+        function init() {
+            lucide.createIcons();
+            detectSupportedFormats();
+            setupEventListeners();
+            updateUIState();
+        }
+
+        function detectSupportedFormats() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 1; canvas.height = 1;
+            
+            // 1. Manual Support 
+            // We strictly implement manual encoders for these to guarantee availability 
+            // regardless of browser native support (which is often missing for TIFF/BMP writing).
+            const manualFormats = [
+                { mime: 'image/svg+xml', label: 'SVG (.svg)' },
+                { mime: 'image/x-icon', label: 'ICO (.ico)' },
+                { mime: 'image/bmp', label: 'BMP (.bmp)' },
+                { mime: 'image/tiff', label: 'TIFF (.tiff)' }
+            ];
+            
+            manualFormats.forEach(fmt => {
+                 const opt = document.createElement('option');
+                 opt.value = fmt.mime;
+                 opt.textContent = fmt.label;
+                 els.formatSelect.appendChild(opt);
+                 state.supportedFormats.push(fmt);
+            });
+
+            // 2. Detect Browser Support for others (JPG, PNG, WEBP, AVIF, HEIC)
+            const candidates = [
+                { mime: 'image/jpeg', label: 'JPEG (.jpg)' },
+                { mime: 'image/png', label: 'PNG (.png)' },
+                { mime: 'image/webp', label: 'WebP (.webp)' },
+                { mime: 'image/gif', label: 'GIF (.gif)' },
+                { mime: 'image/avif', label: 'AVIF (.avif)' },
+                { mime: 'image/heic', label: 'HEIC (.heic)' },
+                { mime: 'image/heif', label: 'HEIF (.heif)' }
+            ];
+
+            candidates.forEach(fmt => {
+                const dataUrl = canvas.toDataURL(fmt.mime);
+                const supports = dataUrl.indexOf(`data:${fmt.mime}`) === 0;
+                
+                if (supports) {
+                    state.supportedFormats.push(fmt);
+                    const opt = document.createElement('option');
+                    opt.value = fmt.mime;
+                    opt.textContent = fmt.label;
+                    els.formatSelect.appendChild(opt);
+                }
+            });
+            
+            // Trigger change to set initial quality visibility
+            els.formatSelect.dispatchEvent(new Event('change'));
+        }
+
+        function setupEventListeners() {
+            // Drag & Drop
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                els.dropZone.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            els.dropZone.addEventListener('dragenter', highlight, false);
+            els.dropZone.addEventListener('dragover', highlight, false);
+            els.dropZone.addEventListener('dragleave', unhighlight, false);
+            els.dropZone.addEventListener('drop', handleDrop, false);
+            
+            // File Input
+            els.fileInput.addEventListener('change', handleFiles, false);
+
+            // Settings
+            els.formatSelect.addEventListener('change', (e) => {
+                state.settings.format = e.target.value;
+                // Lossless formats or formats where quality slider isn't standard in Canvas API
+                // (GIF quality is usually not configurable via basic toBlob)
+                const isLossless = ['image/png', 'image/bmp', 'image/gif', 'image/svg+xml', 'image/tiff', 'image/x-icon'].includes(e.target.value);
+                
+                if (isLossless) {
+                    gsap.to(els.qualityControl, { height: 0, opacity: 0, duration: 0.3, overflow: 'hidden' });
+                } else {
+                    gsap.to(els.qualityControl, { height: 'auto', opacity: 1, duration: 0.3, overflow: 'visible' });
+                }
+            });
+
+            els.qualitySlider.addEventListener('input', (e) => {
+                const val = e.target.value;
+                state.settings.quality = val / 100;
+                els.qualityValue.textContent = `${val}%`;
+            });
+
+            // Actions
+            els.convertAllBtn.addEventListener('click', convertAll);
+            els.downloadAllBtn.addEventListener('click', downloadAllZip);
+        }
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        function highlight() { els.dropZone.classList.add('drop-zone-active'); }
+        function unhighlight() { els.dropZone.classList.remove('drop-zone-active'); }
+
+        function handleDrop(e) {
+            unhighlight();
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            handleFiles({ target: { files } });
+        }
+
+        // --- FILE HANDLING ---
+        function handleFiles(e) {
+            const newFiles = [...e.target.files];
+            
+            let addedCount = 0;
+
+            newFiles.forEach(file => {
+                // Permissive check: accept any image mime type
+                // Also attempt to accept files that might be images but lack mime type (rare but happens)
+                if (!file.type.startsWith('image/') && file.type !== '') {
+                    showToast(`Skipped ${file.name}: Not an image`, 'error');
+                    return;
+                }
+                
+                addFileToState(file);
+                addedCount++;
+            });
+
+            if (addedCount > 0) {
+                showToast(`Added ${addedCount} image${addedCount > 1 ? 's' : ''}`, 'success');
+                updateUIState();
+            }
+            
+            els.fileInput.value = ''; // Reset input
+        }
+
+        function addFileToState(file) {
+            const id = 'img_' + Math.random().toString(36).substr(2, 9);
+            const objectUrl = URL.createObjectURL(file);
+            
+            const fileObj = {
+                id,
+                file,
+                objectUrl,
+                status: 'pending', // pending, processing, done, error
+                outputBlob: null,
+                outputUrl: null
+            };
+
+            state.files.set(id, fileObj);
+            createFileCard(fileObj);
+        }
+
+        function updateUIState() {
+            const hasFiles = state.files.size > 0;
+            
+            if (hasFiles) {
+                els.emptyState.classList.add('hidden');
+                els.gallery.classList.remove('hidden');
+                els.convertAllBtn.disabled = false;
+                gsap.to(els.convertAllBtn, { opacity: 1 });
+            } else {
+                els.emptyState.classList.remove('hidden');
+                els.gallery.classList.add('hidden');
+                els.convertAllBtn.disabled = true;
+                gsap.to(els.convertAllBtn, { opacity: 0.5 });
+                els.downloadAllBtn.classList.add('hidden');
+            }
+
+            // Check if any done to show download all
+            const anyDone = Array.from(state.files.values()).some(f => f.status === 'done');
+            if (anyDone) {
+                els.downloadAllBtn.classList.remove('hidden');
+            }
+        }
+
+        // --- UI RENDERING ---
+        function createFileCard(fileObj) {
+            const div = document.createElement('div');
+            div.id = fileObj.id;
+            div.className = 'glass-card rounded-xl p-4 flex gap-4 relative overflow-hidden opacity-0';
+            
+            const size = formatBytes(fileObj.file.size);
+            const ext = fileObj.file.name.split('.').pop().toUpperCase();
+
+            div.innerHTML = `
+                <!-- Thumbnail -->
+                <div class="w-20 h-20 bg-gray-800 rounded-lg overflow-hidden flex-shrink-0 relative border border-white/10">
+                    <img src="${fileObj.objectUrl}" class="w-full h-full object-cover" alt="Preview">
+                    ${fileObj.file.type === 'image/gif' ? '<div class="absolute bottom-0 right-0 bg-black/70 text-[8px] px-1 text-white">FRAME 1</div>' : ''}
+                </div>
+
+                <!-- Info -->
+                <div class="flex-grow min-w-0 flex flex-col justify-center">
+                    <h4 class="text-sm font-semibold text-white truncate pr-6" title="${fileObj.file.name}">${fileObj.file.name}</h4>
+                    <div class="flex items-center gap-2 text-xs text-gray-400 mt-1">
+                        <span class="bg-white/10 px-1.5 py-0.5 rounded">${ext}</span>
+                        <span>${size}</span>
+                    </div>
+                    
+                    <!-- Status Bar -->
+                    <div class="mt-3 relative h-1.5 bg-gray-700 rounded-full overflow-hidden w-full">
+                        <div class="status-bar absolute left-0 top-0 h-full bg-indigo-500 w-0 transition-all duration-300"></div>
+                    </div>
+                    <div class="status-text text-[10px] text-gray-400 mt-1 font-mono">Ready to convert</div>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex flex-col justify-between items-end gap-2">
+                    <button onclick="removeFile('${fileObj.id}')" class="text-gray-500 hover:text-red-400 transition-colors">
+                        <i data-lucide="x" class="w-4 h-4"></i>
+                    </button>
+                    <button id="btn-dl-${fileObj.id}" onclick="downloadOne('${fileObj.id}')" class="opacity-0 pointer-events-none p-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-white transition-all shadow-lg">
+                        <i data-lucide="download" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            `;
+
+            els.gallery.appendChild(div);
+            lucide.createIcons();
+            
+            // Animate In
+            gsap.to(div, { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' });
+        }
+
+        function updateCardStatus(id, status, msg = '') {
+            const card = document.getElementById(id);
+            if (!card) return;
+
+            const bar = card.querySelector('.status-bar');
+            const txt = card.querySelector('.status-text');
+            const btn = document.getElementById(`btn-dl-${id}`);
+
+            if (status === 'processing') {
+                bar.classList.add('animate-pulse');
+                bar.style.width = '60%';
+                bar.style.backgroundColor = '#6366f1'; // Indigo
+                txt.textContent = 'Converting...';
+                txt.className = 'status-text text-[10px] text-indigo-400 mt-1 font-mono';
+            } else if (status === 'done') {
+                bar.classList.remove('animate-pulse');
+                bar.style.width = '100%';
+                bar.style.backgroundColor = '#10b981'; // Green
+                txt.textContent = msg || 'Done';
+                txt.className = 'status-text text-[10px] text-green-400 mt-1 font-mono';
+                
+                btn.classList.remove('opacity-0', 'pointer-events-none');
+                btn.classList.add('opacity-100', 'pointer-events-auto');
+            } else if (status === 'error') {
+                bar.classList.remove('animate-pulse');
+                bar.style.width = '100%';
+                bar.style.backgroundColor = '#ef4444'; // Red
+                txt.textContent = 'Error';
+                txt.className = 'status-text text-[10px] text-red-400 mt-1 font-mono';
+            }
+        }
+
+        function removeFile(id) {
+            const fileObj = state.files.get(id);
+            if (fileObj) {
+                URL.revokeObjectURL(fileObj.objectUrl);
+                if (fileObj.outputUrl) URL.revokeObjectURL(fileObj.outputUrl);
+                state.files.delete(id);
+            }
+
+            const card = document.getElementById(id);
+            gsap.to(card, {
+                opacity: 0, height: 0, marginBottom: 0, padding: 0, duration: 0.3, onComplete: () => {
+                    card.remove();
+                    updateUIState();
+                }
+            });
+        }
+
+        // --- CORE CONVERSION LOGIC ---
+        async function convertAll() {
+            els.convertAllBtn.disabled = true;
+            els.convertAllBtn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Processing...';
+            lucide.createIcons();
+
+            const queue = Array.from(state.files.entries());
+            let completed = 0;
+
+            for (const [id, fileObj] of queue) {
+                // Determine format extension for UI feedback
+                const targetMime = state.settings.format;
+                let extension = targetMime.split('/')[1].toUpperCase();
+                if (extension.includes('SVG')) extension = 'SVG';
+
+                updateCardStatus(id, 'processing');
+                
+                try {
+                    const result = await processImage(fileObj.objectUrl, targetMime, state.settings.quality, fileObj.file.type);
+                    
+                    fileObj.outputBlob = result.blob;
+                    fileObj.outputUrl = URL.createObjectURL(result.blob);
+                    fileObj.status = 'done';
+                    
+                    const sizeDiff = formatBytes(result.blob.size);
+                    updateCardStatus(id, 'done', `${extension} • ${sizeDiff}`);
+                } catch (err) {
+                    console.error(err);
+                    fileObj.status = 'error';
+                    updateCardStatus(id, 'error');
+                }
+                completed++;
+            }
+
+            els.convertAllBtn.disabled = false;
+            els.convertAllBtn.innerHTML = '<i data-lucide="zap" class="w-4 h-4"></i> Convert All';
+            lucide.createIcons();
+            
+            showToast(`Processed ${completed} images`, 'success');
+            updateUIState();
+        }
+
+        function processImage(src, mime, quality, originalType) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = els.canvas;
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+
+                    // Handle Transparency & Mattes
+                    // JPG, BMP, HEIC need matte. TIFF/PNG/SVG/ICO/WEBP support alpha.
+                    // Note: Our manual BMP encoder is 24-bit (no alpha) for max compatibility
+                    const formatsNeedingMatte = ['image/jpeg', 'image/bmp', 'image/heic', 'image/heif'];
+                    
+                    if (formatsNeedingMatte.includes(mime)) {
+                        ctx.fillStyle = '#FFFFFF';
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    } else {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    }
+
+                    ctx.drawImage(img, 0, 0);
+
+                    // --- Manual Encoders ---
+
+                    // 1. SVG Output
+                    if (mime === 'image/svg+xml') {
+                        const dataUrl = canvas.toDataURL('image/png');
+                        const svgString = `<svg xmlns="http://www.w3.org/2000/svg" width="${canvas.width}" height="${canvas.height}">
+                            <image href="${dataUrl}" width="${canvas.width}" height="${canvas.height}" />
+                        </svg>`;
+                        const blob = new Blob([svgString], { type: 'image/svg+xml' });
+                        resolve({ blob });
+                        return;
+                    }
+
+                    // 2. BMP Output (24-bit)
+                    if (mime === 'image/bmp') {
+                        try {
+                            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                            const bmpBlob = createBMP(imageData.data, canvas.width, canvas.height);
+                            resolve({ blob: bmpBlob });
+                        } catch (e) { reject(e); }
+                        return;
+                    }
+
+                    // 3. TIFF Output (Uncompressed RGBA)
+                    if (mime === 'image/tiff') {
+                        try {
+                            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                            const tiffBlob = createTIFF(imageData.data, canvas.width, canvas.height);
+                            resolve({ blob: tiffBlob });
+                        } catch (e) { reject(e); }
+                        return;
+                    }
+
+                    // 4. ICO Output
+                    if (mime === 'image/x-icon') {
+                         canvas.toBlob(async (pngBlob) => {
+                             if (!pngBlob) { reject(new Error('ICO conversion failed')); return; }
+                             
+                             const pngData = new Uint8Array(await pngBlob.arrayBuffer());
+                             const size = pngData.length;
+                             const w = canvas.width > 255 ? 0 : canvas.width;
+                             const h = canvas.height > 255 ? 0 : canvas.height;
+                             
+                             const header = new Uint8Array(22);
+                             const view = new DataView(header.buffer);
+                             
+                             view.setUint16(0, 0, true); 
+                             view.setUint16(2, 1, true); 
+                             view.setUint16(4, 1, true); 
+                             
+                             view.setUint8(6, w); view.setUint8(7, h);
+                             view.setUint8(8, 0); view.setUint8(9, 0);
+                             view.setUint16(10, 1, true); view.setUint16(12, 32, true);
+                             view.setUint32(14, size, true); view.setUint32(18, 22, true);
+                             
+                             const icoBlob = new Blob([header, pngData], { type: 'image/x-icon' });
+                             resolve({ blob: icoBlob });
+                         }, 'image/png');
+                         return;
+                    }
+
+                    // --- Standard Browser Output ---
+                    canvas.toBlob((blob) => {
+                        if (blob) resolve({ blob });
+                        else reject(new Error('Format not supported by browser'));
+                    }, mime, quality);
+                };
+                img.onerror = reject;
+                img.src = src;
+            });
+        }
+
+        // --- BINARY WRITERS (MANUAL ENCODING) ---
+
+        /** Creates a 24-bit BMP Blob from RGBA pixel data */
+        function createBMP(rgbaData, width, height) {
+            const rowSize = Math.floor((24 * width + 31) / 32) * 4;
+            const fileSize = 54 + rowSize * height;
+            const buffer = new ArrayBuffer(fileSize);
+            const view = new DataView(buffer);
+            
+            // File Header
+            view.setUint16(0, 0x4D42, false); // BM
+            view.setUint32(2, fileSize, true);
+            view.setUint32(10, 54, true); // Offset to data
+
+            // Info Header
+            view.setUint32(14, 40, true); // Header size
+            view.setInt32(18, width, true);
+            view.setInt32(22, -height, true); // Top-down
+            view.setUint16(26, 1, true); // Planes
+            view.setUint16(28, 24, true); // Bits per pixel
+            
+            // Pixel Data (RGB)
+            let pos = 54;
+            for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
+                    const i = (y * width + x) * 4;
+                    // Write BGR
+                    view.setUint8(pos++, rgbaData[i + 2]); // B
+                    view.setUint8(pos++, rgbaData[i + 1]); // G
+                    view.setUint8(pos++, rgbaData[i]);     // R
+                }
+                // Padding
+                const padding = rowSize - (width * 3);
+                pos += padding;
+            }
+            
+            return new Blob([buffer], { type: 'image/bmp' });
+        }
+
+        /** Creates a basic Uncompressed RGBA TIFF Blob */
+        function createTIFF(rgbaData, width, height) {
+            // Header (8) + Data (w*h*4) + IFD (count + 12*entries + next)
+            const dataSize = width * height * 4;
+            const numEntries = 11;
+            const ifdSize = 2 + (numEntries * 12) + 4;
+            const totalSize = 8 + dataSize + ifdSize;
+            
+            const buffer = new ArrayBuffer(totalSize);
+            const view = new DataView(buffer);
+            
+            // Header: Little Endian (II), 42, Offset to IFD (8 + dataSize)
+            view.setUint16(0, 0x4949, false); // II
+            view.setUint16(2, 42, true);
+            view.setUint32(4, 8 + dataSize, true); // Offset to IFD (placed after data)
+            
+            // Pixel Data (RGBA)
+            new Uint8Array(buffer, 8, dataSize).set(rgbaData);
+            
+            // IFD
+            const ifdOffset = 8 + dataSize;
+            let pos = ifdOffset;
+            
+            // Helper to write IFD Entry
+            const writeEntry = (tag, type, count, value) => {
+                view.setUint16(pos, tag, true);
+                view.setUint16(pos + 2, type, true); // 3=SHORT, 4=LONG
+                view.setUint32(pos + 4, count, true);
+                view.setUint32(pos + 8, value, true); // Value or Offset
+                pos += 12;
+            };
+
+            view.setUint16(pos, numEntries, true); // Num Entries
+            pos += 2;
+
+            writeEntry(256, 4, 1, width);  // ImageWidth
+            writeEntry(257, 4, 1, height); // ImageHeight
+            writeEntry(258, 3, 4, 8); // BitsPerSample (hack: 8 fits in offset, but strictly should point to array 8,8,8,8. Viewers often accept 8 for 1 sample or implied.) 
+      
+            
+            writeEntry(259, 3, 1, 1); // Compression: None
+            writeEntry(262, 3, 1, 2); // Photometric: RGB
+            writeEntry(273, 4, 1, 8); // StripOffsets: 8 (start of data)
+            writeEntry(277, 3, 1, 4); // SamplesPerPixel: 4 (RGBA)
+            writeEntry(278, 4, 1, height); // RowsPerStrip
+            writeEntry(279, 4, 1, dataSize); // StripByteCounts
+            writeEntry(282, 5, 1, 72); // XResolution (dummy)
+            writeEntry(283, 5, 1, 72); // YResolution (dummy)
+            writeEntry(296, 3, 1, 2);  // ResolutionUnit (Inch)
+            
+            view.setUint32(pos, 0, true); // Next IFD (0)
+
+            return new Blob([buffer], { type: 'image/tiff' });
+        }
+
+        // --- DOWNLOAD UTILS ---
+        
+        function getExtension(mime) {
+            switch(mime) {
+                case 'image/jpeg': return 'jpg';
+                case 'image/png': return 'png';
+                case 'image/webp': return 'webp';
+                case 'image/gif': return 'gif';
+                case 'image/bmp': return 'bmp';
+                case 'image/tiff': return 'tiff';
+                case 'image/x-icon': return 'ico';
+                case 'image/svg+xml': return 'svg';
+                case 'image/avif': return 'avif';
+                case 'image/heic': return 'heic';
+                case 'image/heif': return 'heif';
+                default: return 'img';
+            }
+        }
+
+        function downloadOne(id) {
+            const fileObj = state.files.get(id);
+            if (!fileObj || !fileObj.outputBlob) return;
+
+            const ext = getExtension(state.settings.format);
+            const originalName = fileObj.file.name.substring(0, fileObj.file.name.lastIndexOf('.')) || fileObj.file.name;
+            const newName = `${originalName}_converted.${ext}`;
+
+            const a = document.createElement('a');
+            a.href = fileObj.outputUrl;
+            a.download = newName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        async function downloadAllZip() {
+            const doneFiles = Array.from(state.files.values()).filter(f => f.status === 'done');
+            if (doneFiles.length === 0) return;
+
+            els.downloadAllBtn.disabled = true;
+            els.downloadAllBtn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Zipping...';
+            lucide.createIcons();
+
+            const zipWriter = new NativeZipWriter();
+            const ext = getExtension(state.settings.format);
+
+            doneFiles.forEach(f => {
+                const originalName = f.file.name.substring(0, f.file.name.lastIndexOf('.')) || f.file.name;
+                const filename = `${originalName}.${ext}`;
+                zipWriter.add(filename, f.outputBlob);
+            });
+
+            try {
+                const zipBlob = await zipWriter.generate();
+                const url = URL.createObjectURL(zipBlob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'converted_images.zip';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                
+                setTimeout(() => URL.revokeObjectURL(url), 1000);
+            } catch (e) {
+                console.error("Zip Error", e);
+                showToast("Error creating ZIP file", 'error');
+            }
+
+            els.downloadAllBtn.disabled = false;
+            els.downloadAllBtn.innerHTML = '<i data-lucide="archive" class="w-4 h-4"></i> Download ZIP';
+            lucide.createIcons();
+        }
+
+        // --- UTILS ---
+        function formatBytes(bytes, decimals = 2) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const dm = decimals < 0 ? 0 : decimals;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+        }
+
+        function showToast(message, type = 'success') {
+            const div = document.createElement('div');
+            const colors = type === 'success' ? 'border-green-500/50 bg-green-500/10 text-green-200' : 'border-red-500/50 bg-red-500/10 text-red-200';
+            const icon = type === 'success' ? 'check-circle' : 'alert-circle';
+            
+            div.className = `glass-panel px-4 py-3 rounded-lg flex items-center gap-3 border ${colors} shadow-xl min-w-[300px] pointer-events-auto transform translate-x-10 opacity-0`;
+            div.innerHTML = `
+                <i data-lucide="${icon}" class="w-5 h-5"></i>
+                <span class="text-sm font-medium">${message}</span>
+            `;
+
+            els.toastContainer.appendChild(div);
+            lucide.createIcons();
+
+            gsap.to(div, { x: 0, opacity: 1, duration: 0.3, ease: 'back.out(1.2)' });
+            gsap.to(div, { 
+                x: 20, opacity: 0, duration: 0.3, delay: 4, 
+                onComplete: () => div.remove() 
+            });
+        }
+
+        // Run
+        window.addEventListener('DOMContentLoaded', init);
+
+    </script>
+</body>
+</html>
