@@ -4,4 +4,4 @@ A collection of small, standalone HTML applications designed for simple and ligh
 
 > [!NOTE]
 > These HTML files are created using **vibe coding / AI** and are intended mainly for
-> **personal use cases** and **small, lightweight applications**.
+> **experimenting**, **personal use cases**, and **small, lightweight applications**.
